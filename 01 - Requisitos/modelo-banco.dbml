@@ -1,0 +1,28 @@
+Table produtos {
+  id integer [primary key, increment]
+  codigo varchar [unique, not null]
+  nome varchar [not null]
+  preco decimal(10,2) [not null]
+  estoque integer [not null, default: 0]
+  criado_em timestamp [default: `now()`]
+}
+
+Table vendas {
+  id integer [primary key, increment]
+  valor_total decimal(10,2) [not null]
+  valor_pago decimal(10,2) [not null]
+  troco decimal(10,2) [not null, default: 0]
+  forma_pagamento varchar [not null] // Dinheiro, Pix, Cartao
+  data_venda timestamp [default: `now()`]
+}
+
+Table itens_venda {
+  id integer [primary key, increment]
+  venda_id integer [not null]
+  produto_id integer [not null]
+  quantidade integer [not null]
+  preco_unitario decimal(10,2) [not null]
+}
+
+Ref: itens_venda.venda_id > vendas.id
+Ref: itens_venda.produto_id > produtos.id

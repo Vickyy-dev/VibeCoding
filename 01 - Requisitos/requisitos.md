@@ -29,3 +29,7 @@ graph TD
     B[Operador de Caixa] -->|Consulta Preços| C
     B -->|Registra Venda / PDV| C
     B -->|Gera Baixa no Estoque| C
+
+    ## 6. Modelo de Banco de Dados (DER)
+
+![Modelo de Banco de Dados](modelo-banco-pdv.png)
