@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { pool } from "./db/connection.js";
 import produtosRoutes from "./routes/produtos.js";
+import assistenteRoutes from "./routes/assistente.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.get("/api/health", async (req, res) => {
 });
 
 app.use("/api/produtos", produtosRoutes);
+app.use("/api/assistente", assistenteRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor Backend a correr em http://localhost:${PORT}`);

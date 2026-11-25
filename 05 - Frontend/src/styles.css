@@ -215,6 +215,126 @@
   }
 }
 
+@keyframes welcome-soft-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1.005);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes welcome-idle-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translate3d(0, -1.5px, 0);
+  }
+}
+
+@keyframes welcome-leaf-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -24px, 0) rotate(0);
+  }
+  10% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.7;
+    transform: translate3d(16px, 175px, 0) rotate(85deg);
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-12px, 355px, 0) rotate(175deg);
+  }
+}
+
+@keyframes welcome-logo-shimmer {
+  from {
+    left: -65%;
+  }
+  to {
+    left: 125%;
+  }
+}
+
+.welcome-hero {
+  background:
+    radial-gradient(circle at 12% 50%, rgba(62, 142, 65, 0.08), transparent 42%),
+    radial-gradient(circle at 88% 25%, rgba(224, 122, 34, 0.07), transparent 38%),
+    linear-gradient(135deg, #fcfbf8 0%, #f7f3ea 55%, #eff5ee 100%);
+}
+
+.welcome-entrance,
+.welcome-sub-entrance,
+.welcome-actions-entrance {
+  animation: welcome-soft-entrance 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.welcome-sub-entrance {
+  animation-delay: 0.12s;
+}
+
+.welcome-actions-entrance {
+  animation-delay: 0.22s;
+}
+
+.welcome-gentle-bounce {
+  display: inline-block;
+  animation: welcome-idle-bounce 9s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  will-change: transform;
+}
+
+.welcome-logo-shine::after {
+  position: absolute;
+  inset: -35% auto -35% -65%;
+  width: 42%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.18) 30%,
+    rgba(255, 255, 255, 0.82) 50%,
+    rgba(255, 255, 255, 0.18) 70%,
+    transparent 100%
+  );
+  content: "";
+  pointer-events: none;
+  transform: skewX(-20deg);
+}
+
+.welcome-logo-shine:hover::after {
+  animation: welcome-logo-shimmer 1s ease-out;
+}
+
+.welcome-hero-leaf {
+  top: -28px;
+  pointer-events: none;
+  animation: welcome-leaf-fall 7.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-entrance,
+  .welcome-sub-entrance,
+  .welcome-actions-entrance,
+  .welcome-gentle-bounce,
+  .welcome-logo-shine:hover::after,
+  .welcome-hero-leaf {
+    animation: none;
+  }
+}
+
 @utility animate-fade-up {
   animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
