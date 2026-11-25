@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { pool } from "./db/connection.js";
+import produtosRoutes from "./routes/produtos.js";
 
 dotenv.config();
 
@@ -19,6 +20,8 @@ app.get("/api/health", async (req, res) => {
     res.status(500).json({ ok: false, service: "vibecoding-backend", db: "disconnected", error: err.message });
   }
 });
+
+app.use("/api/produtos", produtosRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor Backend a correr em http://localhost:${PORT}`);
