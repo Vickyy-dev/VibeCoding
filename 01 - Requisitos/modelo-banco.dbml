@@ -1,28 +1,55 @@
+// Modelo de Banco de Dados - PDV / Marketplace Sustentável (Novos & Usados)
+
+Enum condicao_produto {
+  novo
+  usado
+}
+
+Enum forma_pagamento_enum {
+  pix
+  card
+  boleto
+}
+
+Table clientes {
+  id integer [primary key, increment]
+  nome varchar(120) [not null]
+  email varchar(160) [unique, not null]
+  senha_hash varchar(255) [not null]
+  criado_em timestamp [default: `now()`]
+}
+
 Table produtos {
   id integer [primary key, increment]
-  codigo varchar [unique, not null]
-  nome varchar [not null]
+  codigo varchar(50) [unique, not null]
+  nome varchar(150) [not null]
+  descricao text
+  categoria varchar(50) [not null] // eletronicos, casa, moda, acessorios
+  condicao condicao_produto [not null, default: 'novo']
   preco decimal(10,2) [not null]
+  preco_original decimal(10,2)
   estoque integer [not null, default: 0]
+  imagem_url varchar(255)
   criado_em timestamp [default: `now()`]
 }
 
 Table vendas {
   id integer [primary key, increment]
+  cliente_id integer [ref: > clientes.id] // opcional caso venda seja avulsa no PDV
+  subtotal decimal(10,2) [not null]
+  frete decimal(10,2) [not null, default: 0]
+  desconto_pix decimal(10,2) [not null, default: 0]
   valor_total decimal(10,2) [not null]
   valor_pago decimal(10,2) [not null]
   troco decimal(10,2) [not null, default: 0]
-  forma_pagamento varchar [not null] // Dinheiro, Pix, Cartao
+  forma_pagamento forma_pagamento_enum [not null]
   data_venda timestamp [default: `now()`]
 }
 
 Table itens_venda {
   id integer [primary key, increment]
-  venda_id integer [not null]
-  produto_id integer [not null]
+  venda_id integer [not null, ref: > vendas.id]
+  produto_id integer [not null, ref: > produtos.id]
   quantidade integer [not null]
   preco_unitario decimal(10,2) [not null]
 }
-
-Ref: itens_venda.venda_id > vendas.id
-Ref: itens_venda.produto_id > produtos.id
