@@ -18,6 +18,7 @@ import { AuthProvider } from "../lib/auth-context";
 import { CartProvider } from "../lib/cart-context";
 import { Navbar } from "../components/Navbar";
 import { CartDrawer } from "../components/CartDrawer";
+import { AssistenteChat } from "../components/AssistenteChat";
 
 function NotFoundComponent() {
   return (
@@ -87,12 +88,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Verde Market — Marketplace Minimalista" },
       {
         name: "description",
-        content: "E-commerce fictício minimalista inspirado no Mercado Livre com busca, categorias e carrinho interativo.",
+        content:
+          "E-commerce fictício minimalista inspirado no Mercado Livre com busca, categorias e carrinho interativo.",
       },
       { property: "og:title", content: "Verde Market — Marketplace Minimalista" },
       {
         property: "og:description",
-        content: "E-commerce fictício minimalista inspirado no Mercado Livre com busca, categorias e carrinho interativo.",
+        content:
+          "E-commerce fictício minimalista inspirado no Mercado Livre com busca, categorias e carrinho interativo.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -170,6 +173,7 @@ function RootComponent() {
             </footer>
             <CartDrawer />
             <Toaster position="bottom-left" richColors />
+            <AssistenteChat />
           </div>
         </CartProvider>
       </AuthProvider>

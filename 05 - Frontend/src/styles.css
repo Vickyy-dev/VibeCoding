@@ -293,7 +293,7 @@
 
 .welcome-gentle-bounce {
   display: inline-block;
-  animation: welcome-idle-bounce 9s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  animation: welcome-idle-bounce 6s cubic-bezier(0.37, 0, 0.63, 1) infinite;
   will-change: transform;
 }
 
@@ -327,10 +327,7 @@
 @media (prefers-reduced-motion: reduce) {
   .welcome-entrance,
   .welcome-sub-entrance,
-  .welcome-actions-entrance,
-  .welcome-gentle-bounce,
-  .welcome-logo-shine:hover::after,
-  .welcome-hero-leaf {
+  .welcome-actions-entrance {
     animation: none;
   }
 }
