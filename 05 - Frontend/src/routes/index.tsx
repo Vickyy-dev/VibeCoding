@@ -1,12 +1,51 @@
-import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
-import { ArrowDown, CreditCard, RotateCcw, ShieldCheck, SlidersHorizontal, Truck } from "lucide-react";
-import heroImg from "@/assets/hero-marketplace.jpg";
-import { CATEGORIES, PRODUCTS, type CategoryId } from "@/data/products";
+import { useEffect, useMemo, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { CreditCard, RotateCcw, ShieldCheck, SlidersHorizontal, Truck } from "lucide-react";
+import brandTree from "@/assets/brand-tree.png";
+import christmasMarketBanner from "@/assets/christmas-market-banner.svg";
+import christmasGiftsBanner from "@/assets/christmas-gifts-banner.svg";
+import christmasSaleBanner from "@/assets/promo-seasonal.jpg";
+import { CATEGORIES, formatBRL, PRODUCTS, type CategoryId } from "@/data/products";
 import { ProductCard } from "@/components/ProductCard";
 import { useCart } from "@/lib/cart-context";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 
 type SortOption = "relevance" | "price-asc" | "price-desc" | "rating" | "discount";
+
+const PROMO_BANNERS = [
+  {
+    type: "welcome",
+    alt: "Boas-vindas ao VerdeMarket",
+  },
+  {
+    type: "image",
+    src: christmasSaleBanner,
+    alt: "Promoção de Natal: até 30% de desconto",
+    background: "#9a0808",
+    position: "center 32%",
+  },
+  {
+    type: "image",
+    src: christmasMarketBanner,
+    alt: "Um Natal mais especial no VerdeMarket, até 40% off",
+    background: "#092b20",
+    position: "center",
+  },
+  {
+    type: "image",
+    src: christmasGiftsBanner,
+    alt: "Celebre o Natal com ofertas de até 30% off",
+    background: "#6d1018",
+    position: "center",
+  },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,12 +53,14 @@ export const Route = createFileRoute("/")({
       { title: "Verde Market — Ofertas e Vitrine Minimalista" },
       {
         name: "description",
-        content: "Explore eletrônicos, casa, moda e acessórios com frete grátis e parcelamento sem juros no Verde Market.",
+        content:
+          "Explore eletrônicos, casa, moda e acessórios com frete grátis e parcelamento sem juros no Verde Market.",
       },
       { property: "og:title", content: "Verde Market — Ofertas e Vitrine Minimalista" },
       {
         property: "og:description",
-        content: "Explore eletrônicos, casa, moda e acessórios com frete grátis e parcelamento sem juros no Verde Market.",
+        content:
+          "Explore eletrônicos, casa, moda e acessórios com frete grátis e parcelamento sem juros no Verde Market.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -32,6 +73,35 @@ function Index() {
   const { searchQuery, setSearchQuery } = useCart();
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>("todos");
   const [sortBy, setSortBy] = useState<SortOption>("relevance");
+  const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isCarouselHovered, setIsCarouselHovered] = useState(false);
+  const [isCarouselFocused, setIsCarouselFocused] = useState(false);
+
+  useEffect(() => {
+    const prefersReducedMotion =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    if (!carouselApi || isCarouselHovered || isCarouselFocused || prefersReducedMotion) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => carouselApi.scrollNext(), 5000);
+    return () => window.clearInterval(intervalId);
+  }, [carouselApi, isCarouselFocused, isCarouselHovered]);
+
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    const updateCurrentSlide = () => setCurrentSlide(carouselApi.selectedScrollSnap());
+    updateCurrentSlide();
+    carouselApi.on("select", updateCurrentSlide);
+    carouselApi.on("reInit", updateCurrentSlide);
+
+    return () => {
+      carouselApi.off("select", updateCurrentSlide);
+      carouselApi.off("reInit", updateCurrentSlide);
+    };
+  }, [carouselApi]);
 
   const filteredProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -57,36 +127,111 @@ function Index() {
 
   return (
     <div>
-      <section className="relative overflow-hidden border-b border-border bg-surface-subtle">
-        <img
-          src={heroImg}
-          alt="Vitrine minimalista Verde Market"
-          className="absolute inset-0 size-full object-cover object-right opacity-95"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-r from-surface-subtle/92 via-surface-subtle/75 to-surface-subtle/20 sm:from-surface-subtle/45 sm:via-surface-subtle/15 sm:to-transparent"
-        />
-        <div className="relative mx-auto flex min-h-[380px] max-w-6xl items-center px-4 py-14 sm:min-h-[440px] sm:px-6">
-          <div className="animate-fade-up max-w-xl">
-            <p className="text-xs font-bold tracking-[0.16em] text-primary uppercase">
-              Semana Verde • Até 23% OFF
-            </p>
-            <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-foreground sm:text-6xl sm:leading-[1.05]">
-              Compras leves, entrega rápida.
-            </h1>
-            <p className="mt-4 max-w-md text-base text-foreground/80 sm:text-lg">
-              Eletrônicos, casa e acessórios selecionados com parcelamento sem juros e frete grátis.
-            </p>
-            <a
-              href="#catalogo"
-              className="mt-7 inline-flex h-11 items-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary/90 active:scale-95"
-            >
-              Explorar ofertas
-              <ArrowDown className="size-4" />
-            </a>
+      <section
+        aria-label="Ofertas em destaque"
+        className="relative border-b border-border bg-surface-subtle pb-[92px] sm:pb-[132px]"
+      >
+        <Carousel
+          setApi={setCarouselApi}
+          opts={{ loop: true, align: "start" }}
+          className="group relative"
+          onMouseEnter={() => setIsCarouselHovered(true)}
+          onMouseLeave={() => setIsCarouselHovered(false)}
+          onFocusCapture={() => setIsCarouselFocused(true)}
+          onBlurCapture={(event) => {
+            const nextFocused = event.relatedTarget;
+            if (!(nextFocused instanceof Node) || !event.currentTarget.contains(nextFocused)) {
+              setIsCarouselFocused(false);
+            }
+          }}
+        >
+          <CarouselContent className="ml-0">
+            {PROMO_BANNERS.map((banner) => (
+              <CarouselItem key={banner.alt} className="pl-0">
+                {banner.type === "welcome" ? (
+                  <WelcomeBanner />
+                ) : (
+                  <div
+                    className="h-[210px] w-full overflow-hidden sm:h-[300px] lg:h-[420px]"
+                    style={{ backgroundColor: banner.background }}
+                  >
+                    <img
+                      src={banner.src}
+                      alt={banner.alt}
+                      className="size-full object-contain sm:object-cover"
+                      style={{ objectPosition: banner.position }}
+                    />
+                  </div>
+                )}
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious
+            aria-label="Banner anterior"
+            className="left-3 size-10 border-0 bg-card/95 text-foreground shadow-md opacity-80 transition-opacity hover:bg-card hover:opacity-100 sm:left-5"
+          />
+          <CarouselNext
+            aria-label="Próximo banner"
+            className="right-3 size-10 border-0 bg-card/95 text-foreground shadow-md opacity-80 transition-opacity hover:bg-card hover:opacity-100 sm:right-5"
+          />
+          <div
+            className="absolute inset-x-0 bottom-[76px] flex justify-center gap-2 sm:bottom-[124px]"
+            aria-label="Selecionar banner"
+          >
+            {PROMO_BANNERS.map((banner, index) => (
+              <button
+                key={banner.alt}
+                type="button"
+                aria-label={`Mostrar banner ${index + 1}`}
+                aria-current={currentSlide === index ? "true" : undefined}
+                onClick={() => carouselApi?.scrollTo(index)}
+                className={`size-2.5 rounded-full border border-white/80 shadow-sm transition-all ${
+                  currentSlide === index ? "scale-110 bg-primary" : "bg-card/80 hover:bg-card"
+                }`}
+              />
+            ))}
           </div>
-        </div>
+          {filteredProducts.length > 0 && (
+            <div className="pointer-events-none absolute inset-x-0 -bottom-[56px] z-10 px-4 sm:-bottom-[100px] sm:px-6">
+              <div className="mx-auto max-w-6xl">
+                <div
+                  aria-label="Produtos em destaque"
+                  className="pointer-events-auto flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-4 sm:overflow-visible sm:pb-0"
+                >
+                  {filteredProducts.slice(0, 4).map((product) => (
+                    <Link
+                      key={product.id}
+                      to="/produto/$id"
+                      params={{ id: product.id }}
+                      className="flex min-w-[78%] snap-start items-center gap-3 rounded-xl border border-border/80 bg-card p-3 shadow-lg shadow-foreground/10 transition-transform hover:-translate-y-1 hover:shadow-xl sm:min-w-0"
+                    >
+                      <span className="flex size-[76px] shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-subtle">
+                        <img
+                          src={product.image}
+                          alt=""
+                          className="size-full object-contain"
+                          loading="lazy"
+                        />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="mb-1 inline-flex rounded-full bg-brand-soft px-2 py-0.5 text-[10px] font-bold text-brand-soft-foreground">
+                          -{product.discountPercent}% OFF
+                        </span>
+                        <span className="block truncate text-xs font-medium text-foreground">
+                          {product.title}
+                        </span>
+                        <span className="mt-1 block text-base font-bold text-foreground">
+                          {formatBRL(product.price)}
+                        </span>
+                        <span className="block text-[11px] text-shipping">Ver oferta</span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </Carousel>
       </section>
 
       <section className="border-b border-border bg-card">
@@ -117,7 +262,11 @@ function Index() {
 
       <section id="catalogo" className="mx-auto max-w-6xl px-4 pt-10 sm:px-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-wrap items-center gap-2" role="tablist" aria-label="Filtrar por categoria">
+          <div
+            className="flex flex-wrap items-center gap-2"
+            role="tablist"
+            aria-label="Filtrar por categoria"
+          >
             {CATEGORIES.map((category) => {
               const active = selectedCategory === category.id;
               return (
@@ -207,6 +356,79 @@ function Index() {
           </div>
         )}
       </section>
+    </div>
+  );
+}
+
+function WelcomeBanner() {
+  const leaves = [
+    { left: "8%", delay: "0s", duration: "7.4s" },
+    { left: "19%", delay: "2.1s", duration: "8.2s" },
+    { left: "31%", delay: "4.5s", duration: "7.8s" },
+    { left: "47%", delay: "1.2s", duration: "8.5s" },
+    { left: "61%", delay: "3.4s", duration: "7.1s" },
+    { left: "74%", delay: "5s", duration: "8.1s" },
+    { left: "87%", delay: "2.8s", duration: "7.6s" },
+    { left: "95%", delay: "0.8s", duration: "8.3s" },
+  ];
+
+  return (
+    <div className="h-[300px] w-full px-3 py-3 sm:h-[360px] sm:px-6 sm:py-5 lg:h-[420px]">
+      <div className="welcome-hero relative mx-auto flex size-full max-w-6xl items-center overflow-hidden rounded-3xl border border-emerald-950/10 shadow-[0_14px_36px_-14px_rgba(30,86,49,0.2)]">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          {leaves.map((leaf, index) => (
+            <span
+              key={leaf.left}
+              className="welcome-hero-leaf absolute text-primary"
+              style={{
+                left: leaf.left,
+                animationDelay: leaf.delay,
+                animationDuration: leaf.duration,
+              }}
+            >
+              <svg
+                viewBox="0 0 32 20"
+                width={index % 2 === 0 ? 20 : 15}
+                height={index % 2 === 0 ? 13 : 10}
+                fill="none"
+              >
+                <path d="M2 13C6 3 20 1 30 6 25 15 13 19 2 13Z" fill="currentColor" />
+                <path d="M4 13Q16 9 28 6.5" stroke="white" strokeOpacity=".55" strokeWidth="1.2" />
+              </svg>
+            </span>
+          ))}
+        </div>
+
+        <div className="relative z-10 flex w-full flex-col items-center justify-between gap-4 px-5 py-5 text-center sm:flex-row sm:gap-8 sm:px-8 sm:py-7 sm:text-left lg:px-12">
+          <span className="welcome-logo-shine relative isolate inline-flex size-24 shrink-0 overflow-hidden rounded-full sm:size-32 lg:size-40">
+            <img
+              src={brandTree}
+              alt="Logo VerdeMarket com árvore em tons de verde e laranja"
+              className="static-logo-badge size-full object-contain"
+            />
+          </span>
+
+          <div className="flex-1 space-y-2 sm:space-y-3">
+            <div className="welcome-entrance inline-flex items-center gap-2 rounded-full border border-[#1E5631]/15 bg-[#1E5631]/[0.06] px-3 py-1 text-xs font-semibold tracking-wide text-[#1E5631]">
+              <span className="size-1.5 rounded-full bg-[#E07A22]" />
+              Marketplace sustentável &amp; marcas conscientes
+            </div>
+            <h1 className="welcome-gentle-bounce text-2xl leading-tight font-bold tracking-tight text-[#1E5631] sm:text-3xl lg:text-5xl">
+              Bem-vindo ao <span className="text-[#E07A22]">VerdeMarket</span>
+            </h1>
+            <p className="welcome-sub-entrance mx-auto max-w-xl text-sm leading-relaxed text-emerald-950/75 sm:mx-0 sm:text-base">
+              Descubra produtos selecionados, criadores responsáveis e marcas com propósito reunidos
+              em um só lugar.
+            </p>
+            <a
+              href="#catalogo"
+              className="welcome-actions-entrance ui-button inline-flex items-center justify-center rounded-xl bg-[#1E5631] px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#2D6A3E]"
+            >
+              Conhecer novidades
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

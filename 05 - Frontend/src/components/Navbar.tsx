@@ -1,6 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Leaf, LogOut, MapPin, Search, ShoppingBag, User, X } from "lucide-react";
+import { LogOut, MapPin, Search, ShoppingBag, User, X } from "lucide-react";
 import { toast } from "sonner";
+import brandTree from "@/assets/brand-tree.png";
 import { useCart } from "@/lib/cart-context";
 import { useAuth } from "@/lib/auth-context";
 
@@ -25,9 +26,11 @@ export function Navbar() {
           onClick={() => setSearchQuery("")}
           className="group flex shrink-0 items-center gap-2 text-foreground transition-opacity hover:opacity-85"
         >
-          <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-transform duration-200 group-hover:scale-105">
-            <Leaf className="size-5" />
-          </span>
+          <img
+            src={brandTree}
+            alt=""
+            className="size-9 shrink-0 object-contain transition-transform duration-200 group-hover:scale-105"
+          />
           <span className="text-lg font-bold tracking-tight sm:text-xl">
             Verde<span className="text-primary">Market</span>
           </span>

@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700" fill="none">
+  <defs>
+    <linearGradient id="background" x1="120" y1="30" x2="1470" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#092B20"/>
+      <stop offset=".52" stop-color="#0D4933"/>
+      <stop offset="1" stop-color="#061D18"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="matrix(0 440 -520 0 1160 310)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D9A94D" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#D9A94D" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#FFF1B6"/>
+      <stop offset=".5" stop-color="#D8A94F"/>
+      <stop offset="1" stop-color="#FFF0B0"/>
+    </linearGradient>
+    <linearGradient id="gift" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#D74838"/>
+      <stop offset="1" stop-color="#8E1E25"/>
+    </linearGradient>
+    <filter id="shadow" x="-60" y="-70" width="520" height="560" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="17"/>
+      <feOffset dy="18"/>
+      <feComponentTransfer><feFuncA type="linear" slope=".38"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="soft-glow" x="0" y="0" width="1600" height="700" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="2.5"/>
+    </filter>
+  </defs>
+  <path fill="url(#background)" d="M0 0h1600v700H0z"/>
+  <path fill="url(#glow)" d="M0 0h1600v700H0z"/>
+  <path stroke="#DDBB72" stroke-opacity=".14" d="M0 626c272-82 498-81 726 2s493 79 874-18"/>
+  <path stroke="#DDBB72" stroke-opacity=".09" d="M0 651c282-78 497-72 726 7s505 76 874-10"/>
+  <g fill="#F4D788">
+    <circle cx="92" cy="93" r="2"/><circle cx="184" cy="184" r="2"/><circle cx="348" cy="87" r="2"/>
+    <circle cx="510" cy="224" r="2"/><circle cx="784" cy="83" r="2"/><circle cx="866" cy="185" r="2"/>
+    <circle cx="1461" cy="119" r="2"/><circle cx="1532" cy="265" r="2"/><circle cx="1396" cy="514" r="2"/>
+    <circle cx="996" cy="104" r="2"/><circle cx="1285" cy="80" r="2"/>
+  </g>
+  <g fill="#F4D788" opacity=".8">
+    <path d="m138 270 5 12 12 5-12 5-5 12-5-12-12-5 12-5 5-12Z"/>
+    <path d="m765 126 4 9 10 4-10 4-4 10-4-10-10-4 10-4 4-9Z"/>
+    <path d="m1510 387 4 9 10 4-10 4-4 10-4-10-10-4 10-4 4-9Z"/>
+    <path d="m910 512 3 7 8 3-8 3-3 8-3-8-8-3 8-3 3-7Z"/>
+  </g>
+  <g opacity=".66" stroke="#E8C574" stroke-width="2">
+    <path d="M1350 0v48"/><path d="M1454 0v82"/><path d="M1542 0v48"/>
+  </g>
+  <g>
+    <circle cx="1350" cy="73" r="24" fill="#A82F2C"/>
+    <circle cx="1454" cy="111" r="31" fill="url(#gold)"/>
+    <circle cx="1542" cy="72" r="21" fill="#A82F2C"/>
+    <path d="M1342 48h16v7h-16zM1444 79h20v8h-20zM1535 49h14v6h-14z" fill="#E4C277"/>
+    <ellipse cx="1342" cy="64" rx="7" ry="12" fill="#fff" opacity=".16"/>
+    <ellipse cx="1444" cy="101" rx="8" ry="15" fill="#fff" opacity=".35"/>
+  </g>
+  <g transform="translate(1210 260)" filter="url(#shadow)">
+    <path d="m-26 388 204-353 204 353H-26Z" fill="#09261D" stroke="#D9B562" stroke-opacity=".56" stroke-width="3"/>
+    <path d="m18 315 160-281 162 281H18Z" fill="#0B3828"/>
+    <path d="m60 240 118-206 120 206H60Z" fill="#0E4932"/>
+    <path d="m99 163 79-129 80 129H99Z" fill="#12603D"/>
+    <path d="m137 87 41-67 42 67h-83Z" fill="#187449"/>
+    <path stroke="url(#gold)" stroke-width="8" stroke-linecap="round" d="M61 244c79-18 159 14 245-3M20 319c97-23 200 17 321-4M-5 369c117-24 253 21 370-5"/>
+    <path d="m178 0 13 27 30 4-22 20 5 30-26-14-26 14 5-30-22-20 30-4 13-27Z" fill="url(#gold)" stroke="#FFF1B6" stroke-width="3"/>
+    <g fill="#D94A39" stroke="#F3D28A" stroke-width="3">
+      <circle cx="111" cy="150" r="12"/><circle cx="222" cy="201" r="13"/><circle cx="130" cy="285" r="14"/>
+      <circle cx="281" cy="291" r="11"/><circle cx="82" cy="344" r="12"/><circle cx="253" cy="112" r="10"/>
+    </g>
+    <g fill="#F5D98E">
+      <circle cx="170" cy="122" r="7"/><circle cx="201" cy="268" r="8"/><circle cx="292" cy="350" r="7"/>
+      <circle cx="58" cy="215" r="7"/><circle cx="170" cy="344" r="8"/>
+    </g>
+  </g>
+  <g transform="translate(1025 485)" filter="url(#shadow)">
+    <path fill="url(#gift)" d="M0 75h204v142H0z"/>
+    <path fill="#E7C56F" d="M83 75h34v142H83z"/>
+    <path fill="#A9282C" d="M-14 40h232v52H-14z"/>
+    <path fill="#E7C56F" d="M83 40h34v52H83z"/>
+    <path stroke="#F3D78F" stroke-width="12" d="M99 41c-78-7-69-81-21-66 26 8 24 42 21 66Zm0 0c78-7 69-81 21-66-26 8-24 42-21 66Z"/>
+    <path fill="#F3D78F" d="m100 23 19 19-19 19-19-19 19-19Z"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="128" y="199" fill="#E8C879" font-size="24" font-weight="700" letter-spacing="7">VERDEMARKET APRESENTA</text>
+    <text x="120" y="307" fill="#FFF9EA" font-size="86" font-weight="700" letter-spacing="-2">Um Natal</text>
+    <text x="120" y="397" fill="#FFF9EA" font-size="86" font-weight="700" letter-spacing="-2">mais especial</text>
+    <path d="M128 438h96" stroke="#E8C879" stroke-width="5" stroke-linecap="round"/>
+    <text x="128" y="493" fill="#EDE6D5" font-size="29" font-weight="400">Presentes que encantam, ofertas que alegram.</text>
+    <rect x="128" y="544" width="252" height="64" rx="32" fill="#E8C879"/>
+    <text x="164" y="585" fill="#173B2A" font-size="25" font-weight="700">ATÉ 40% OFF</text>
+  </g>
+</svg>
