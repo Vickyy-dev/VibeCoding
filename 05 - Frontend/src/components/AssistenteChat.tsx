@@ -34,7 +34,8 @@ const SUGESTOES_VENDEDOR: SugestaoRapida[] = [
   { label: "Ver concorrência", texto: "Quais são os preços e condições atuais dos itens da loja?" },
 ];
 
-const API_URL = import.meta.env?.["VITE_API_URL"] || "http://localhost:3001/api/assistente";
+const BASE_URL = (import.meta.env?.["VITE_API_URL"] || "http://localhost:3001").replace(/\/+$/, "");
+const API_URL = BASE_URL.endsWith("/api/assistente") ? BASE_URL : `${BASE_URL}/api/assistente`;
 
 export const AssistenteChat: React.FC = () => {
   const [aberto, setAberto] = useState(false);
@@ -93,14 +94,32 @@ export const AssistenteChat: React.FC = () => {
         }),
       });
 
-      const data = await resp.json();
+      const respostaServidor = await resp.text();
+      let data: unknown;
+      try {
+        data = JSON.parse(respostaServidor);
+      } catch {
+        const contentType = resp.headers.get("content-type") || "desconhecido";
+        throw new Error(
+          `O servidor respondeu em formato inválido (HTTP ${resp.status}, ${contentType}).`,
+        );
+      }
+
+      const payload =
+        typeof data === "object" && data !== null
+          ? (data as { error?: unknown; resposta?: unknown })
+          : {};
 
       if (!resp.ok) {
-        throw new Error(data?.error || "Não foi possível obter resposta.");
+        throw new Error(
+          typeof payload.error === "string" ? payload.error : "Não foi possível obter resposta.",
+        );
       }
 
       const respostaTexto =
-        typeof data?.resposta === "string" ? data.resposta : JSON.stringify(data, null, 2);
+        typeof payload.resposta === "string"
+          ? payload.resposta
+          : (JSON.stringify(data, null, 2) ?? String(data));
 
       setMensagens((prev) => [
         ...prev,
@@ -117,7 +136,7 @@ export const AssistenteChat: React.FC = () => {
         {
           id: `${Date.now()}-err`,
           role: "assistant",
-          content: `Ops, tive um problema para falar com o servidor (${msgErro}). Confira se o backend está rodando em http://localhost:3001.`,
+          content: `Ops, tive um problema para falar com o servidor (${msgErro}). Verifique se a API está acessível em ${API_URL}.`,
         },
       ]);
     } finally {
