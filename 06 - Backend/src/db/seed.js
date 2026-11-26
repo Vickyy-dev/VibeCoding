@@ -70,6 +70,30 @@ const INITIAL_PRODUCTS = [
     estoque: 5,
     imagem_url: "/assets/prod-backpack.jpg",
   },
+  {
+    codigo: "PROD-007",
+    nome: "Blusa Básica ReUse de Algodão Reciclado",
+    descricao:
+      "Blusa usada em ótimo estado, confeccionada em tecido com fibras de algodão reciclado. Reaproveitar a peça e usar fibras recicladas ajuda a reduzir o consumo de matéria-prima virgem, embora toda produção tenha algum impacto ambiental.",
+    categoria: "moda",
+    condicao: "usado",
+    preco: 89.90,
+    preco_original: 129.90,
+    estoque: 1,
+    imagem_url: "/assets/prod-blusa-sustentavel.svg",
+  },
+  {
+    codigo: "PROD-008",
+    nome: "Short Casual de Sarja Leve Areia",
+    descricao:
+      "Short casual novo de sarja leve em tom areia, com cintura média e bolsos funcionais.",
+    categoria: "moda",
+    condicao: "novo",
+    preco: 119.90,
+    preco_original: 159.90,
+    estoque: 8,
+    imagem_url: "/assets/prod-short-casual.svg",
+  },
 ];
 
 async function runSeed() {

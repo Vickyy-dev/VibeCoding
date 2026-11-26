@@ -107,14 +107,10 @@ function formatarListaProdutos(lista, limite = 3) {
     .join("\n");
 }
 
-function montarRespostaInteligenteFallback(mensagem, perfil, produtos, motivoFallback = "") {
+function montarRespostaInteligenteFallback(mensagem, perfil, produtos) {
   const texto = mensagem.toLowerCase().trim();
   const textoLimpo = texto.replace(/[!?.~,]+$/g, "").trim();
   const valorCitado = extrairValorNaMensagem(texto);
-
-  const avisoModo = motivoFallback
-    ? `\n\n*(Modo local ativo — ${motivoFallback})*`
-    : "\n\n*(Modo local ativo — adicione GEMINI_API_KEY no .env para respostas em linguagem livre com IA)*";
 
   // 1. Cumprimentos e saudações (curtos ou com "tudo bem")
   const ehCumprimento =
@@ -127,15 +123,15 @@ function montarRespostaInteligenteFallback(mensagem, perfil, produtos, motivoFal
 
   if (ehCumprimento) {
     return perfil === "vendedor"
-      ? `Olá! Seja muito bem-vindo(a)! Tudo ótimo por aqui, e com você? Ficarei feliz em ajudar a precificar, melhorar seus anúncios ou tirar dúvidas sobre vendas na loja. Por onde gostaria de começar?${avisoModo}`
-      : `Olá! Seja muito bem-vindo(a)! Tudo ótimo por aqui, e com você? Estou à disposição para te ajudar a encontrar produtos, comparar opções ou tirar dúvidas sobre compras. Como posso te ajudar hoje?${avisoModo}`;
+      ? "Olá! Seja muito bem-vindo(a)! Tudo ótimo por aqui, e com você? Ficarei feliz em ajudar a precificar, melhorar seus anúncios ou tirar dúvidas sobre vendas na loja. Por onde gostaria de começar?"
+      : "Olá! Seja muito bem-vindo(a)! Tudo ótimo por aqui, e com você? Estou à disposição para te ajudar a encontrar produtos, comparar opções ou tirar dúvidas sobre compras. Como posso te ajudar hoje?";
   }
 
   // 2. Agradecimentos e despedidas educadas
   if (/^(obrigad[oa]|valeu|muito obrigad[oa]|agrade[cç]o|tchau|at[eé]\s*mais|flw)\b/i.test(textoLimpo)) {
     return perfil === "vendedor"
-      ? `Eu que agradeço pela confiança! Sempre que precisar de ajuda para precificar, organizar um anúncio ou analisar o catálogo, é só chamar. Boas vendas!${avisoModo}`
-      : `Eu que agradeço! Fico muito feliz em ajudar. Se surgir qualquer dúvida sobre produtos, valores ou compras, estarei por aqui. Tenha um ótimo dia!${avisoModo}`;
+      ? "Eu que agradeço pela confiança! Sempre que precisar de ajuda para precificar, organizar um anúncio ou analisar o catálogo, é só chamar. Boas vendas!"
+      : "Eu que agradeço! Fico muito feliz em ajudar. Se surgir qualquer dúvida sobre produtos, valores ou compras, estarei por aqui. Tenha um ótimo dia!";
   }
 
   // 3. Perguntas simples sobre formas de pagamento (cartão, dinheiro, Pix, parcelamento, à vista)
@@ -145,15 +141,15 @@ function montarRespostaInteligenteFallback(mensagem, perfil, produtos, motivoFal
     )
   ) {
     if (perfil === "vendedor") {
-      return `Com certeza! Para quem vende, cada forma de pagamento tem vantagens diferentes:\n• **Pix ou à vista:** ajuda a receber o valor rapidamente e evita taxas ou parcelamentos longos.\n• **Cartão / parcelado:** costuma facilitar compras de valor mais alto, desde que você considere eventuais taxas na sua margem.\n\nQual faixa de preço têm os itens que você pretende vender?${avisoModo}`;
+      return "Com certeza! Para quem vende, cada forma de pagamento tem vantagens diferentes:\n• **Pix ou à vista:** ajuda a receber o valor rapidamente e evita taxas ou parcelamentos longos.\n• **Cartão / parcelado:** costuma facilitar compras de valor mais alto, desde que você considere eventuais taxas na sua margem.\n\nQual faixa de preço têm os itens que você pretende vender?";
     }
 
-    return `Com prazer te ajudo a pensar nisso! Depende do seu objetivo no momento:\n• **Dinheiro, Pix ou à vista:** excelente opção para manter o orçamento organizado e evitar comprometer meses seguintes com parcelas.\n• **Cartão:** pode fazer sentido quando você quer diluir um valor planejado com tranquilidade, desde que caiba com folga no seu limite e você quite a fatura em dia.\n\nVocê está pensando em alguma compra específica agora ou quer ver opções dentro de um orçamento?${avisoModo}`;
+    return "Com prazer te ajudo a pensar nisso! Depende do seu objetivo no momento:\n• **Dinheiro, Pix ou à vista:** excelente opção para manter o orçamento organizado e evitar comprometer meses seguintes com parcelas.\n• **Cartão:** pode fazer sentido quando você quer diluir um valor planejado com tranquilidade, desde que caiba com folga no seu limite e você quite a fatura em dia.\n\nVocê está pensando em alguma compra específica agora ou quer ver opções dentro de um orçamento?";
   }
 
   // 4. Perguntas simples sobre entrega, frete, prazo, troca, devolução ou garantia
   if (/frete|entrega|entregar|prazo|envio|troca|trocar|devolução|devolucao|devolver|garantia/.test(texto)) {
-    return `Claro! Aqui vão alguns pontos importantes para conferir antes de fechar:\n• **Entrega e frete:** vale sempre verificar o valor e o prazo estimado para a sua região antes de finalizar o pedido.\n• **Condição, troca e garantia:** em itens **usados ou recondicionados**, confira com atenção o estado descrito no anúncio; em itens **novos**, observe as condições de troca e garantia da loja.\n\nPosso te ajudar a olhar algum produto em especial?${avisoModo}`;
+    return "Claro! Aqui vão alguns pontos importantes para conferir antes de fechar:\n• **Entrega e frete:** vale sempre verificar o valor e o prazo estimado para a sua região antes de finalizar o pedido.\n• **Condição, troca e garantia:** em itens **usados ou recondicionados**, confira com atenção o estado descrito no anúncio; em itens **novos**, observe as condições de troca e garantia da loja.\n\nPosso te ajudar a olhar algum produto em especial?";
   }
 
   // 5. Modo VENDEDOR
@@ -183,7 +179,7 @@ function montarRespostaInteligenteFallback(mensagem, perfil, produtos, motivoFal
         "Na hora de precificar, considere o custo do item, eventuais taxas ou despesas extras e a margem que você deseja obter, mantendo um valor competitivo frente ao catálogo.";
     }
 
-    return `Fico feliz em te orientar no modo **Vendedor**!\n${dicaExtra}\n\nReferências atuais da loja:\n${exemplos || "Sem itens cadastrados ainda."}\n\nQual produto você gostaria de anunciar ou precificar agora?${avisoModo}`;
+    return `Fico feliz em te orientar no modo **Vendedor**!\n${dicaExtra}\n\nReferências atuais da loja:\n${exemplos || "Sem itens cadastrados ainda."}\n\nQual produto você gostaria de anunciar ou precificar agora?`;
   }
 
   // 6. Modo CLIENTE (filtros de preço, condição, comparação ou busca por palavra-chave)
@@ -247,8 +243,8 @@ function montarRespostaInteligenteFallback(mensagem, perfil, produtos, motivoFal
 
   if (!listaFinal.length) {
     return valorCitado
-      ? `Poxa, não encontrei itens disponíveis até **R$ ${valorCitado.toFixed(2)}** no estoque no momento. Gostaria de aumentar um pouco esse valor ou ver outras opções?${avisoModo}`
-      : `Poxa, não encontrei itens exatos com esse filtro agora. Quer tentar outra palavra ou me dizer qual valor você pretende gastar?${avisoModo}`;
+      ? `Poxa, não encontrei itens disponíveis até **R$ ${valorCitado.toFixed(2)}** no estoque no momento. Gostaria de aumentar um pouco esse valor ou ver outras opções?`
+      : "Poxa, não encontrei itens exatos com esse filtro agora. Quer tentar outra palavra ou me dizer qual valor você pretende gastar?";
   }
 
   if (/comparar|diferença|diferenca|custo-benefício|custo beneficio/.test(texto) && listaFinal.length >= 2) {
@@ -259,10 +255,10 @@ function montarRespostaInteligenteFallback(mensagem, perfil, produtos, motivoFal
       )
       .join("\n");
 
-    return `Preparei um comparativo rápido das opções disponíveis:\n${comparativo}\n\nSe o objetivo for economizar ou apostar em reaproveitamento, os itens usados/recondicionados costumam ter ótimo custo-benefício; se preferir algo novo e o orçamento permitir, vale avaliar a opção nova.\n\nQual desses chama mais a sua atenção?${avisoModo}`;
+    return `Preparei um comparativo rápido das opções disponíveis:\n${comparativo}\n\nSe o objetivo for economizar ou apostar em reaproveitamento, os itens usados/recondicionados costumam ter ótimo custo-benefício; se preferir algo novo e o orçamento permitir, vale avaliar a opção nova.\n\nQual desses chama mais a sua atenção?`;
   }
 
-  return `Com certeza! Separei estas opções disponíveis para você:\n${formatarListaProdutos(listaFinal)}\n\nQuer filtrar por um valor máximo, comparar itens ou saber mais detalhes sobre algum deles?${avisoModo}`;
+  return `Com certeza! Separei estas opções disponíveis para você:\n${formatarListaProdutos(listaFinal)}\n\nQuer filtrar por um valor máximo, comparar itens ou saber mais detalhes sobre algum deles?`;
 }
 
 export async function responderAssistenteSustentavel(mensagem, historico = [], opcoes = {}) {
@@ -298,6 +294,7 @@ export async function responderAssistenteSustentavel(mensagem, historico = [], o
 
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) {
+    console.warn("GEMINI_API_KEY não configurada; usando resposta local.");
     return removerMarcacaoMarkdown(montarRespostaInteligenteFallback(mensagem, perfil, produtos));
   }
 
@@ -351,35 +348,23 @@ ${mensagem}`;
     );
 
     if (!response.ok) {
-      return removerMarcacaoMarkdown(
-        montarRespostaInteligenteFallback(
-          mensagem,
-          perfil,
-          produtos,
-          `API Gemini retornou HTTP ${response.status}`
-        )
+      const detalhesErro = (await response.text()).slice(0, 1000);
+      console.warn(
+        `API Gemini retornou HTTP ${response.status}: ${detalhesErro || "sem detalhes"}`
       );
+      return removerMarcacaoMarkdown(montarRespostaInteligenteFallback(mensagem, perfil, produtos));
     }
 
     const data = await response.json();
     const texto = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    if (!texto) {
+      console.warn("API Gemini retornou uma resposta vazia; usando resposta local.");
+    }
     return removerMarcacaoMarkdown(
-      texto ||
-        montarRespostaInteligenteFallback(
-          mensagem,
-          perfil,
-          produtos,
-          "resposta vazia da API Gemini"
-        )
+      texto || montarRespostaInteligenteFallback(mensagem, perfil, produtos)
     );
-  } catch {
-    return removerMarcacaoMarkdown(
-      montarRespostaInteligenteFallback(
-        mensagem,
-        perfil,
-        produtos,
-        "falha de rede ao chamar a API Gemini"
-      )
-    );
+  } catch (err) {
+    console.error("Falha ao chamar a API Gemini:", err);
+    return removerMarcacaoMarkdown(montarRespostaInteligenteFallback(mensagem, perfil, produtos));
   }
 }
