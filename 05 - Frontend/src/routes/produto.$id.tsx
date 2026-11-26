@@ -21,7 +21,9 @@ import { ProductCard } from "@/components/ProductCard";
 export const Route = createFileRoute("/produto/$id")({
   head: ({ params }) => {
     const product = getProductById(params.id);
-    const title = product ? `${product.title} | Verde Market` : "Produto não encontrado | Verde Market";
+    const title = product
+      ? `${product.title} | Verde Market`
+      : "Produto não encontrado | Verde Market";
     const description = product
       ? product.description
       : "Confira outros produtos disponíveis no Verde Market.";
@@ -88,7 +90,11 @@ function ProductDetailPage() {
       <div className="animate-fade-up mt-6 grid grid-cols-1 gap-8 lg:grid-cols-12">
         <div className="space-y-8 lg:col-span-7">
           <div className="overflow-hidden rounded-2xl border border-border bg-surface-subtle">
-            <img src={product.image} alt={product.title} className="aspect-[4/3] w-full object-cover" />
+            <img
+              src={product.image}
+              alt={product.title}
+              className="aspect-[4/3] w-full object-cover"
+            />
           </div>
 
           <section className="space-y-4">
@@ -119,8 +125,12 @@ function ProductDetailPage() {
 
         <div className="space-y-5 lg:col-span-5">
           <div className="rounded-2xl border border-border bg-card p-6">
-            <p className="text-xs text-muted-foreground">Novo • {product.soldCount}</p>
-            <h1 className="mt-2 text-2xl font-bold leading-tight text-foreground">{product.title}</h1>
+            <p className="text-xs text-muted-foreground">
+              {product.condition ?? "Novo"} • {product.soldCount}
+            </p>
+            <h1 className="mt-2 text-2xl font-bold leading-tight text-foreground">
+              {product.title}
+            </h1>
 
             <div className="mt-3 flex items-center gap-2 text-sm">
               <span className="inline-flex items-center gap-1 font-semibold text-foreground">
@@ -226,7 +236,10 @@ function ProductDetailPage() {
               {product.seller.location} • {product.seller.sales}
             </p>
 
-            <div className="mt-4 grid grid-cols-5 gap-1.5" aria-label="Termômetro de reputação excelente">
+            <div
+              className="mt-4 grid grid-cols-5 gap-1.5"
+              aria-label="Termômetro de reputação excelente"
+            >
               <span className="h-2 rounded-full bg-rep-1" />
               <span className="h-2 rounded-full bg-rep-2" />
               <span className="h-2 rounded-full bg-rep-3" />

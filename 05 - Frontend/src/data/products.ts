@@ -4,12 +4,15 @@ import coffeeImg from "@/assets/prod-coffee.jpg";
 import sneakersImg from "@/assets/prod-sneakers.jpg";
 import lampImg from "@/assets/prod-lamp.jpg";
 import backpackImg from "@/assets/prod-backpack.jpg";
+import blouseImg from "@/assets/prod-blusa-sustentavel.svg";
+import shortsImg from "@/assets/prod-short-casual.svg";
 
 export type CategoryId = "todos" | "eletronicos" | "casa" | "moda" | "acessorios";
 
 export interface Product {
   id: string;
   title: string;
+  condition?: "Novo" | "Usado";
   category: Exclude<CategoryId, "todos">;
   categoryLabel: string;
   price: number;
@@ -225,7 +228,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "mochila-urbana-trilha",
-    title: "Mochila Urbana Impermeável para Notebook 16\" Verde Oliva",
+    title: 'Mochila Urbana Impermeável para Notebook 16" Verde Oliva',
     category: "acessorios",
     categoryLabel: "Acessórios",
     price: 259.0,
@@ -243,7 +246,7 @@ export const PRODUCTS: Product[] = [
       "Lona impermeável de alta densidade, compartimento acolchoado para notebook de até 16 polegadas e bolso lateral oculto antifurto.",
     highlights: [
       "Tecido resistente à chuva com zíperes selados foscos",
-      "Divisória interna acolchoada para notebook até 16\"",
+      'Divisória interna acolchoada para notebook até 16"',
       "Alças ergonômicas respiráveis e faixa para mala de viagem",
     ],
     specs: [
@@ -256,6 +259,80 @@ export const PRODUCTS: Product[] = [
       name: "Trilha Goods Oficial",
       level: "MercadoLíder Platinum",
       sales: "+11 mil vendas",
+      location: "São Paulo, SP",
+    },
+  },
+  {
+    id: "blusa-sustentavel-reuso",
+    title: "Blusa Básica ReUse de Algodão Reciclado",
+    condition: "Usado",
+    category: "moda",
+    categoryLabel: "Moda",
+    price: 89.9,
+    originalPrice: 129.9,
+    discountPercent: 31,
+    installments: 3,
+    freeShipping: true,
+    fullDelivery: false,
+    rating: 4.8,
+    reviewCount: 86,
+    soldCount: "+120 vendidos",
+    stock: 1,
+    image: blouseImg,
+    description:
+      "Blusa usada em ótimo estado, confeccionada em tecido com fibras de algodão reciclado. Reaproveitar a peça e usar fibras recicladas ajuda a reduzir o consumo de matéria-prima virgem, embora toda produção tenha algum impacto ambiental.",
+    highlights: [
+      "Peça usada em ótimo estado de conservação",
+      "Tecido com fibras de algodão reciclado",
+      "Cor verde sálvia e modelagem confortável",
+    ],
+    specs: [
+      { label: "Condição", value: "Usada — ótimo estado" },
+      { label: "Material", value: "Algodão com fibras recicladas" },
+      { label: "Tamanho", value: "M" },
+      { label: "Cor", value: "Verde sálvia" },
+    ],
+    seller: {
+      name: "Reuso Circular",
+      level: "MercadoLíder Gold",
+      sales: "+2 mil vendas",
+      location: "Curitiba, PR",
+    },
+  },
+  {
+    id: "short-casual-areia",
+    title: "Short Casual de Sarja Leve Areia",
+    condition: "Novo",
+    category: "moda",
+    categoryLabel: "Moda",
+    price: 119.9,
+    originalPrice: 159.9,
+    discountPercent: 25,
+    installments: 4,
+    freeShipping: true,
+    fullDelivery: false,
+    rating: 4.7,
+    reviewCount: 64,
+    soldCount: "+90 vendidos",
+    stock: 8,
+    image: shortsImg,
+    description:
+      "Short casual de sarja leve em tom areia, com cintura média e bolsos funcionais. Uma peça versátil para compor looks confortáveis no dia a dia.",
+    highlights: [
+      "Sarja leve e confortável",
+      "Cintura média com fechamento por botão e zíper",
+      "Bolsos frontais e traseiros funcionais",
+    ],
+    specs: [
+      { label: "Condição", value: "Novo" },
+      { label: "Material", value: "Sarja de algodão" },
+      { label: "Tamanho", value: "M" },
+      { label: "Cor", value: "Areia" },
+    ],
+    seller: {
+      name: "Ateliê Aurora",
+      level: "MercadoLíder Gold",
+      sales: "+3 mil vendas",
       location: "São Paulo, SP",
     },
   },
