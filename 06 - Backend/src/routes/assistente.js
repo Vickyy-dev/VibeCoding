@@ -19,7 +19,8 @@ router.post("/", async (req, res) => {
 
     res.json({ resposta });
   } catch (err) {
-    res.status(500).json({ error: "Erro no assistente da loja", details: err.message });
+    console.error("Erro no assistente da loja:", err);
+    res.status(500).json({ error: "Erro no assistente da loja" });
   }
 });
 
