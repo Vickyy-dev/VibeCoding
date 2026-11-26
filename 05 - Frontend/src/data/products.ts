@@ -4,8 +4,8 @@ import coffeeImg from "@/assets/prod-coffee.jpg";
 import sneakersImg from "@/assets/prod-sneakers.jpg";
 import lampImg from "@/assets/prod-lamp.jpg";
 import backpackImg from "@/assets/prod-backpack.jpg";
-import blouseImg from "@/assets/prod-blusa-sustentavel.svg";
-import shortsImg from "@/assets/prod-short-casual.svg";
+import blouseImg from "@/assets/prod-blusa-sustentavel.jpg";
+import shortsImg from "@/assets/prod-short-casual.jpg";
 
 export type CategoryId = "todos" | "eletronicos" | "casa" | "moda" | "acessorios";
 

@@ -80,7 +80,7 @@ const INITIAL_PRODUCTS = [
     preco: 89.90,
     preco_original: 129.90,
     estoque: 1,
-    imagem_url: "/assets/prod-blusa-sustentavel.svg",
+    imagem_url: "/assets/prod-blusa-sustentavel.jpg",
   },
   {
     codigo: "PROD-008",
@@ -92,7 +92,7 @@ const INITIAL_PRODUCTS = [
     preco: 119.90,
     preco_original: 159.90,
     estoque: 8,
-    imagem_url: "/assets/prod-short-casual.svg",
+    imagem_url: "/assets/prod-short-casual.jpg",
   },
 ];
 
