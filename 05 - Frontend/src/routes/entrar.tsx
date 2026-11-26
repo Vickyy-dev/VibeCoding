@@ -1,6 +1,18 @@
+
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Leaf, Lock, Mail, ShoppingBag, User } from "lucide-react";
+import {
+  ArrowLeft,
+  Leaf,
+  Lock,
+  Mail,
+  ShoppingBag,
+  User,
+  Eye,
+  EyeOff,
+  Check,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { formatBRL } from "@/data/products";
@@ -38,11 +50,17 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const isCheckoutFlow = pendingCheckout && totalItems > 0;
 
+  const hasMinLength = password.length >= 6;
+  const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+
   const finishAfterAuth = () => {
     setPendingCheckout(false);
+
     if (isCheckoutFlow) {
       toast.success(
         mode === "login"
@@ -52,7 +70,12 @@ function AuthPage() {
       void navigate({ to: "/checkout" });
       return;
     }
-    toast.success(mode === "login" ? "Login realizado com sucesso!" : "Conta criada com sucesso!");
+
+    toast.success(
+      mode === "login"
+        ? "Login realizado com sucesso!"
+        : "Conta criada com sucesso!",
+    );
     void navigate({ to: "/" });
   };
 
@@ -61,25 +84,82 @@ function AuthPage() {
     setError(null);
 
     if (mode === "register") {
+      if (!name.trim()) {
+        setError("O nome completo é obrigatório.");
+        return;
+      }
+
+      if (!email.trim()) {
+        setError("O e-mail é obrigatório.");
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+        setError("Digite um endereço de e-mail válido.");
+        return;
+      }
+
+      if (!password) {
+        setError("A senha é obrigatória.");
+        return;
+      }
+
+      if (!hasMinLength) {
+        setError("A senha precisa ter pelo menos 6 caracteres.");
+        return;
+      }
+
+      if (!hasSpecialChar) {
+        setError("A senha precisa conter pelo menos um caractere especial, como @, # ou !.");
+        return;
+      }
+
+      if (!confirmPassword) {
+        setError("A confirmação da senha é obrigatória.");
+        return;
+      }
+
       if (password !== confirmPassword) {
         setError("As senhas não coincidem.");
         return;
       }
-      const res = register(name, email, password);
+
+      const res = register(name.trim(), email.trim(), password);
+
       if (!res.ok) {
         setError(res.error ?? "Não foi possível criar a conta.");
         return;
       }
+
       finishAfterAuth();
       return;
     }
 
-    const res = login(email, password);
+    if (!email.trim()) {
+      setError("O e-mail é obrigatório.");
+      return;
+    }
+
+    if (!password) {
+      setError("A senha é obrigatória.");
+      return;
+    }
+
+    const res = login(email.trim(), password);
+
     if (!res.ok) {
       setError(res.error ?? "Não foi possível entrar.");
       return;
     }
+
     finishAfterAuth();
+  };
+
+  const changeMode = (newMode: "login" | "register") => {
+    setMode(newMode);
+    setError(null);
+    setPassword("");
+    setConfirmPassword("");
   };
 
   return (
@@ -129,10 +209,7 @@ function AuthPage() {
             type="button"
             role="tab"
             aria-selected={mode === "login"}
-            onClick={() => {
-              setMode("login");
-              setError(null);
-            }}
+            onClick={() => changeMode("login")}
             className={`h-9 rounded-full text-sm font-semibold transition-all ${
               mode === "login"
                 ? "bg-card text-foreground shadow-xs"
@@ -141,14 +218,12 @@ function AuthPage() {
           >
             Entrar
           </button>
+
           <button
             type="button"
             role="tab"
             aria-selected={mode === "register"}
-            onClick={() => {
-              setMode("register");
-              setError(null);
-            }}
+            onClick={() => changeMode("register")}
             className={`h-9 rounded-full text-sm font-semibold transition-all ${
               mode === "register"
                 ? "bg-card text-foreground shadow-xs"
@@ -163,8 +238,9 @@ function AuthPage() {
           {mode === "register" && (
             <div className="space-y-1.5">
               <label htmlFor="auth-name" className="text-sm font-medium text-foreground">
-                Nome completo
+                Nome completo *
               </label>
+
               <div className="relative">
                 <User className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
                 <input
@@ -174,6 +250,7 @@ function AuthPage() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ex.: Mariana Silva"
                   autoComplete="name"
+                  required
                   className="h-11 w-full rounded-xl border border-input bg-surface-subtle pr-3.5 pl-10 text-sm text-foreground placeholder:text-muted-foreground transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 focus:outline-none"
                 />
               </div>
@@ -182,8 +259,9 @@ function AuthPage() {
 
           <div className="space-y-1.5">
             <label htmlFor="auth-email" className="text-sm font-medium text-foreground">
-              E-mail
+              E-mail *
             </label>
+
             <div className="relative">
               <Mail className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
               <input
@@ -193,6 +271,7 @@ function AuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="voce@exemplo.com"
                 autoComplete="email"
+                required
                 className="h-11 w-full rounded-xl border border-input bg-surface-subtle pr-3.5 pl-10 text-sm text-foreground placeholder:text-muted-foreground transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 focus:outline-none"
               />
             </div>
@@ -200,38 +279,78 @@ function AuthPage() {
 
           <div className="space-y-1.5">
             <label htmlFor="auth-password" className="text-sm font-medium text-foreground">
-              Senha
+              Senha *
             </label>
+
             <div className="relative">
               <Lock className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+
               <input
                 id="auth-password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Mínimo 6 caracteres"
+                placeholder={mode === "register" ? "Crie uma senha" : "Digite sua senha"}
                 autoComplete={mode === "login" ? "current-password" : "new-password"}
-                className="h-11 w-full rounded-xl border border-input bg-surface-subtle pr-3.5 pl-10 text-sm text-foreground placeholder:text-muted-foreground transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                required
+                className="h-11 w-full rounded-xl border border-input bg-surface-subtle pr-11 pl-10 text-sm text-foreground placeholder:text-muted-foreground transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 focus:outline-none"
               />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                className="absolute top-1/2 right-3.5 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
+
+            {mode === "register" && (
+              <div className="space-y-1.5 rounded-xl bg-surface-subtle p-3 text-xs">
+                <p className="font-semibold text-foreground">Requisitos da senha:</p>
+
+                <p className={hasMinLength ? "text-green-600" : "text-muted-foreground"}>
+                  {hasMinLength ? <Check className="mr-1 inline size-3.5" /> : <X className="mr-1 inline size-3.5" />}
+                  Pelo menos 6 caracteres
+                </p>
+
+                <p className={hasSpecialChar ? "text-green-600" : "text-muted-foreground"}>
+                  {hasSpecialChar ? <Check className="mr-1 inline size-3.5" /> : <X className="mr-1 inline size-3.5" />}
+                  Pelo menos um caractere especial (@, #, !)
+                </p>
+              </div>
+            )}
           </div>
 
           {mode === "register" && (
             <div className="space-y-1.5">
               <label htmlFor="auth-confirm" className="text-sm font-medium text-foreground">
-                Confirmar senha
+                Confirmar senha *
               </label>
+
               <div className="relative">
                 <Lock className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+
                 <input
                   id="auth-confirm"
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Repita sua senha"
                   autoComplete="new-password"
-                  className="h-11 w-full rounded-xl border border-input bg-surface-subtle pr-3.5 pl-10 text-sm text-foreground placeholder:text-muted-foreground transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                  required
+                  className="h-11 w-full rounded-xl border border-input bg-surface-subtle pr-11 pl-10 text-sm text-foreground placeholder:text-muted-foreground transition-all focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20 focus:outline-none"
                 />
+
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? "Ocultar confirmação" : "Mostrar confirmação"}
+                  className="absolute top-1/2 right-3.5 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
           )}
@@ -239,6 +358,7 @@ function AuthPage() {
           {error && (
             <p
               role="alert"
+              aria-live="polite"
               className="rounded-xl bg-destructive/10 px-3.5 py-2.5 text-xs font-medium text-destructive"
             >
               {error}
